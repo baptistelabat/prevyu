@@ -1,7 +1,7 @@
 var Datas = require('../datas');
 
 var datas = new Datas({
-    forecast: 'c5c0d073778e5ab9e79a841b00e55f88',
+    forecast: 'myAPIKey',//Replace with user API key from https://developer.forecast.io/
 });
 
 
