@@ -22,15 +22,24 @@
 // These constants won't change.  They're used to give names
 // to the pins used:
 const int analogOutPin = 3; // Analog output pin that the LED is attached to
+const int analogInPin = A0;
+const int pumpPin = 4;
 const int ledPin = 13;
+long dropCounter;
 float delayValue = 0.0;
+int sensorValue;
 String inputString = "";         // A string to hold incoming data
 boolean stringComplete = false;  // Whether the string is complete
 int outputValue = 0;
 float receivedValue = 0.0;
+boolean levelWasDown = true;
+boolean levelIsDown = true;
+boolean freeze = false;
 void setup() {
   // initialize serial communications at 9600 bps:
-  Serial.begin(9600); 
+  Serial.begin(9600);
+    pinMode(pumpPin, OUTPUT); 
+    pinMode(analogOutPin, OUTPUT); 
 }
 
 void serialEvent() {
@@ -65,7 +74,53 @@ void loop() {
   // wait 2 milliseconds before the next loop
   // for the analog-to-digital converter to settle
   // after the last reading:
-
+  sensorValue = analogRead(analogInPin);
+  Serial.print("Sensor: ");
+  Serial.println(sensorValue);
+  levelIsDown = sensorValue>250;
+  
+  if (dropCounter>150) //This should normaly never happen
+  {
+    if (levelIsDown)
+    { //Too many drops without sensor activation: sensor is not working, stop everything!
+      freeze = true;
+    }
+    else
+    { //The sensor was reset, restart normaly
+      freeze = false;
+    }
+  }
+  
+  if (!levelIsDown) //It is time to activate the pump
+  {
+    
+    if (levelWasDown) //normal case, the level was previously low
+    { 
+      //Active the pump for a few seconds (if not freezed)
+      if (!freeze)
+      {
+        digitalWrite(pumpPin, HIGH);
+        Serial.println("High");
+        delay(5000);
+        dropCounter = 0; //Reset the drop counter
+      }
+    }
+    else
+    {//We have just pumped, but the sensor value is not changing
+    //which either means the sensor or the pump are not properly working: stop everything!
+      freeze = true;
+      digitalWrite(pumpPin, LOW);
+    }
+  }
+  else
+  {
+    if (!levelWasDown) // The level was previously up, the sensor is working
+    {
+      freeze = false;
+    }
+    digitalWrite(pumpPin, LOW);
+  }
+  levelWasDown = (sensorValue>250);
 
   // change the analog out value:
   analogWrite(analogOutPin, int(receivedValue));
@@ -108,7 +163,12 @@ void loop() {
        digitalWrite(analogOutPin, LOW);    // turn the LED off by making the voltage LOW
        delay(delayValue);         // wait for a second
        digitalWrite(ledPin, HIGH);   // turn the LED on (HIGH is the voltage level)
-       digitalWrite(analogOutPin, HIGH);   // turn the LED on (HIGH is the voltage level)
+       if (!freeze) //only if not problem
+       {
+         digitalWrite(analogOutPin, HIGH);   // turn the flow on (HIGH is the voltage level)
+         dropCounter++;
+       }
        delay(900);               // wait for a second
+       
    }
 }
