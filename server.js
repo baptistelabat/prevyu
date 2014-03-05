@@ -4,23 +4,22 @@ var datas = new Datas({
     forecast: 'myAPIKey',//Replace with user API key from https://developer.forecast.io/
 });
 
-
 // définir comment gérer la réponse du service météo
 
 datas.on('weather', function(data) {
-    console.log("Send" + data.hourly.data[0].precipIntensity + "in./hr");
-    serialPort.write(data.hourly.data[0].precipIntensity/0.4*255 +"\n");//Normalised to 0-255
+	var unix_time=Date.now()/1000.0;
+	var interp = (unix_time -data.hourly.data[0].time)/( data.hourly.data[1].time - data.hourly.data[0].time)*(data.hourly.data[1].precipIntensity-data.hourly.data[0].precipIntensity) + data.hourly.data[0].precipIntensity
+    console.log("Send" + interp + "in./hr");
+    serialPort.write(interp/0.4*255 +"\n");//Normalised to 0-255
 });
 
 datas.weather('Nantes');
 
 var openFlag;
-var date = new Date()
-//console.log(date.getSeconds());
 
 // ouvrir un port série
 var SerialPort = require("serialport").SerialPort
-var serialPort = new SerialPort("/dev/ttyACM1", {
+var serialPort = new SerialPort("/dev/ttyACM0", {
   baudrate: 9600
 });
 
@@ -40,8 +39,7 @@ var timer = setInterval(function() {
 		datas.weather('Nantes');
 	}
 
- }, 1000)//10seconds
-
+ }, 120000)//120seconds
 
 
 
