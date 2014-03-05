@@ -77,7 +77,9 @@ void loop() {
   sensorValue = analogRead(analogInPin);
   Serial.print("Sensor: ");
   Serial.println(sensorValue);
-  levelIsDown = sensorValue>250;
+  levelIsDown = sensorValue>512;
+  Serial.print("dropCounter: ");
+  Serial.println(dropCounter);
   
   if (dropCounter>150) //This should normaly never happen
   {
@@ -100,8 +102,10 @@ void loop() {
       if (!freeze)
       {
         digitalWrite(pumpPin, HIGH);
-        Serial.println("High");
-        delay(5000);
+        Serial.println("Pump");
+        delay(1000);
+        digitalWrite(pumpPin, LOW);
+        delay(2000);
         dropCounter = 0; //Reset the drop counter
       }
     }
@@ -120,7 +124,7 @@ void loop() {
     }
     digitalWrite(pumpPin, LOW);
   }
-  levelWasDown = (sensorValue>250);
+  levelWasDown = (sensorValue>512);
 
   // change the analog out value:
   analogWrite(analogOutPin, int(receivedValue));
@@ -168,7 +172,7 @@ void loop() {
          digitalWrite(analogOutPin, HIGH);   // turn the flow on (HIGH is the voltage level)
          dropCounter++;
        }
-       delay(900);               // wait for a second
+       delay(1100);               // wait for a second
        
    }
 }
