@@ -1,21 +1,19 @@
 /*
-  Analog input, analog output, serial output
- 
- Reads an analog input pin, maps the result to a range from 0 to 255
- and uses the result to set the pulsewidth modulation (PWM) of an output pin.
- Also prints the results to the serial monitor.
+  Prevyu source code
+  Prevyu is a project by Charly
+  Prevyu is an object connected to the cloud.
+  Prevyu get the rain forecast (with a raspberry), and relate it to the frequency
+  of drops of water in oil.
+  https://github.com/baptistelabat/prevyu/
  
  The circuit:
- * potentiometer connected to analog pin 0.
-   Center pin of the potentiometer goes to the analog pin.
-   side pins of the potentiometer go to +5V and ground
+  - a water level sensor http://composants.e44.com/capteurs/capteurs-niveau-d-eau/capteur-niveau-eau-normalement-ouvert-SCR4.html is linking 0V to analog pin A0 (with a 10kohm pull up resistor to 5V)
+  - an electromechanical relay commanding a pump is connected to digital output pin 4
+  - an electromechanical relay commanding an electrovanne is connected to pin 3
  * LED connected from digital pin 9 to ground
  
- created 29 Dec. 2008
- modified 9 Apr 2012
- by Tom Igoe
+ Program by Baptiste LABAT, 2013
  
- This example code is in the public domain.
  
  */
 
@@ -25,16 +23,19 @@ const int analogOutPin = 3; // Analog output pin that the LED is attached to
 const int analogInPin = A0;
 const int pumpPin = 4;
 const int ledPin = 13;
-long dropCounter;
-float delayValue = 0.0;
-int sensorValue;
+
+long dropCounter; // A counter of the number of drops since the last pumping action
+float delayValue = 0.0; // The delay between two drops
+int sensorValue; // The value of the water level sensor (0-1023)
 String inputString = "";         // A string to hold incoming data
 boolean stringComplete = false;  // Whether the string is complete
 int outputValue = 0;
 float receivedValue = 0.0;
+
 boolean levelWasDown = true;
 boolean levelIsDown = true;
 boolean freeze = false;
+
 void setup() {
   // initialize serial communications at 9600 bps:
   Serial.begin(9600);
