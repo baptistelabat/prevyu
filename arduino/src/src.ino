@@ -103,7 +103,7 @@ void managePump() {
       {
         digitalWrite(pumpPin, HIGH);
         Serial.println("Pumping");
-        delay(1000);
+        delay(2500);
         digitalWrite(pumpPin, LOW);
         Serial.println("Stop pumping");
         delay(2000);
