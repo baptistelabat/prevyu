@@ -42,5 +42,11 @@ Find 'myAPIKey' and replace it with your api key for forecast.io
 
 To launch automatically at start up, refer to http://www.pihomeserver.fr/2013/05/27/raspberry-pi-home-server-lancer-un-programme-automatiquement-au-demarrage/
 
+sudo mv prevyu.sh /etc/init.d
+chmod 755 /etc/init.d/prevyu.sh
+sudo update-rc.d prevyu.sh defaults
+
+
+
 
 
