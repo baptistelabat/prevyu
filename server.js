@@ -1,4 +1,21 @@
 var Datas = require('dataviz-tangible');
+var WebSocket = require('ws');
+var express = require('express'),
+    app = express();
+app.use(express.static(__dirname + '/public'));
+app.listen(8080);
+
+var WebSocketServer = require('ws').Server
+  , wss = new WebSocketServer({port: 8000});
+wss.on('connection', function(ws) {
+    ws.on('message', function(message) {
+		obj = JSON.parse(message);
+        console.log('received: %s', obj.value);
+        ws.send(message);
+        serialPort.write(obj.value +"\n");//Normalised to 0-255
+    });
+    ws.send('something');
+});
 
 var datas = new Datas({
     forecast: 'myAPIKey',//Replace with user API key from https://developer.forecast.io/
@@ -40,7 +57,7 @@ var timer = setInterval(function() {
 	}
 
  }, 120000)//120seconds
-
+*/
 
 
 

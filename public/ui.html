@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html style="direction: ltr;" lang="fr">
+	<head>
+		<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+		<style type=text/css>
+			body { background-image: url(http://localhost:8080/stream); background-repeat:no-repeat; background-position:center top; background-attachment:fixed; height:100% }
+		</style>
+	</head>
+	<body>
+		<h1>Prevyu: prévision de pluie</h1>
+		<form action = "">
+			<fieldset>
+				<p>
+					<label>Rain:  </label>
+					<input id = "RainNumber"
+						type = "number"
+						min = "0"
+						max = "255"
+						value = "0"
+						step = "1"
+						onchange = "updateRainNumber()" />
+					<br/>
+					min
+					<input id = "RainRange"
+						type = "range"
+						min = "0"
+						max = "255"
+						value = "0"
+						onchange = "updateRainRange()" />
+					max
+				</p>
+			</fieldset>
+			<p>Server feedback: 
+				<output id = "serverFeedback">
+					Not connected to server
+				</output>
+			</p>
+		</form>
+		<script type = "text/javascript" language="javascript"
+			src = "static/script.js" charset="utf-8">
+		</script>
+	</body>
+</html>
+            
