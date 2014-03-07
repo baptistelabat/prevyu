@@ -1,4 +1,4 @@
-var ws = new WebSocket("ws://localhost:8000/websocket");
+var ws = new WebSocket("ws://"+window.location.host+":8000/websocket");
 ws.onmessage = function(evt){
 	myOutput.value = evt.data;
 }
