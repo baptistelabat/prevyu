@@ -57,7 +57,6 @@ var timer = setInterval(function() {
 	}
 
  }, 120000)//120seconds
-*/
 
 
 
