@@ -37,6 +37,7 @@ chmod 755 /etc/init.d/prevyu.sh
 sudo update-rc.d prevyu.sh defaults  
 
 
-
+Todo
+-Migrate to https://darksky.net/dev/
 
 
